@@ -8,39 +8,9 @@ import (
 	"strings"
 )
 
-// Lets create a struct for the rooms
-type Node struct {
-	Name      string
-	Neighbors []*Node
-}
+type Graph map[string][]string
 
-// Graph to separate data for further modifications
-type Graph struct {
-	Nodes map[string]*Node
-}
-
-// Initialyse an empty Graph
-func NewGraph() *Graph {
-	return &Graph{
-		Nodes: make(map[string]*Node),
-	}
-}
-
-// method to addd room to the graph
-func (g *Graph) AddRoom(name string) {
-	node := &Node{Name: name}
-	g.Nodes[name] = node
-}
-
-// method to add arc (connections) to the graph
-func (g *Graph) AddArc(from, to string) {
-	fromNode := g.Nodes[from]
-	toNode := g.Nodes[to]
-	fromNode.Neighbors = append(fromNode.Neighbors, toNode)
-}
-
-// Fuction to parse the file
-func ParseInputFile(filename string) (*Graph, error) {
+func ParseInputFile(filename string) (Graph, error) {
 	file, err := os.Open(filename)
 	if err != nil {
 		return nil, err
@@ -48,7 +18,7 @@ func ParseInputFile(filename string) (*Graph, error) {
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
-	graph := NewGraph()
+	graph := make(Graph)
 
 	var numAnts int
 	for scanner.Scan() {
@@ -58,47 +28,59 @@ func ParseInputFile(filename string) (*Graph, error) {
 		}
 
 		if strings.HasPrefix(line, "#") {
-			// Ignore comments
 			continue
 		}
 
 		if numAnts == 0 {
-			// Parse the number of ants
 			numAnts, err = strconv.Atoi(line)
 			if err != nil {
 				return nil, err
 			}
-
 		} else if line == "##start" || line == "##end" {
-			// Ignore start and end directives for now
 			continue
 		} else if strings.Contains(line, "-") {
-			// Parse room connections
 			parts := strings.Split(line, "-")
 			from := parts[0]
 			to := parts[1]
 			graph.AddArc(from, to)
-			graph.AddArc(to, from)
 		} else {
-			// Parse room definition
 			parts := strings.Split(line, " ")
 			name := parts[0]
 			graph.AddRoom(name)
 		}
 	}
 
-	errr := scanner.Err()
-	if errr != nil {
+	err = scanner.Err()
+	if err != nil {
 		return nil, err
 	}
+
 	return graph, nil
 }
 
+func (g Graph) AddRoom(name string) {
+	if _, exists := g[name]; !exists {
+		g[name] = []string{}
+	}
+}
+
+func (g Graph) AddArc(from, to string) {
+	g[from] = append(g[from], to)
+	g[to] = append(g[to], from)
+}
+
 func main() {
-	graph, err := ParseInputFile("text.txt")
+	graph, err := ParseInputFile("input.txt")
 	if err != nil {
 		fmt.Println("Error parsing input file:", err)
 		return
 	}
-	fmt.Println(graph)
+
+	for room, neighbors := range graph {
+		fmt.Printf("Room: %s, Neighbors: ", room)
+		for _, neighbor := range neighbors {
+			fmt.Printf("%s ", neighbor)
+		}
+		fmt.Println()
+	}
 }
