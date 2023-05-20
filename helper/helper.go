@@ -10,6 +10,7 @@ import (
 )
 
 type Graph map[string][]string
+
 type Room struct {
 	Name     string
 	RoomType string
@@ -122,4 +123,25 @@ func (g Graph) AddRoom(name string) {
 func (g Graph) AddArc(from, to string) {
 	g[from] = append(g[from], to)
 	g[to] = append(g[to], from)
+}
+
+func DFS(graph Graph, startRoom string) []string {
+	visited := make(map[string]bool)
+	dfsTraversal := make([]string, 0)
+
+	dfsRecursive(graph, startRoom, visited, &dfsTraversal)
+
+	return dfsTraversal
+}
+
+func dfsRecursive(graph Graph, room string, visited map[string]bool, traversal *[]string) {
+	visited[room] = true
+	*traversal = append(*traversal, room)
+
+	neighbors := graph[room]
+	for _, neighbor := range neighbors {
+		if !visited[neighbor] {
+			dfsRecursive(graph, neighbor, visited, traversal)
+		}
+	}
 }
