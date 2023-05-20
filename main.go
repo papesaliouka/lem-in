@@ -34,7 +34,8 @@ func ParseInputFile(filename string) (Graph, error) {
 		if numAnts == 0 {
 			numAnts, err = strconv.Atoi(line)
 			if err != nil {
-				return nil, err
+				fmt.Println("ERROR: invalid data format")
+				return nil, nil
 			}
 		} else if line == "##start" || line == "##end" {
 			continue
