@@ -1,97 +1,27 @@
 package helper
 
 import (
-	"bufio"
 	"fmt"
 	"os"
-	"strconv"
-	"strings"
 )
 
-type Graph map[string][]string
-
-
-
-func ParseInputFile(filename string) (Graph, int, error) {
+func ParseInputFile(filename string) (Relation,[]Room, int) {
 	file, err := os.Open(filename)
 	if err != nil {
-		return nil, 0, err
+		fmt.Println(err)
+		os.Exit(1)		
 	}
 	defer file.Close()
 
-	scanner := bufio.NewScanner(file)
-	graph := make(Graph)
+	antNumbers :=GetAntsNumber(filename) 
+	rooms := GetRooms(filename)
+	relations :=GetRelations(filename,rooms)
 
-	var numAnts int
-	var numRooms int
-
-	for scanner.Scan() {
-		line := scanner.Text()
-		if line == "##start" || strings.ContainsAny(line,"#") || line == "##end" {
-			continue
-		}
-
-		if numAnts == 0 {
-			numAnts, err = strconv.Atoi(line)
-			if err != nil {
-				fmt.Println("ERROR: invalid data format")
-				return nil, 0, nil
-			}
-		} else if strings.Contains(line, "-") {
-			parts := strings.Split(line, "-")
-			from := parts[0]
-			to := parts[1]
-			graph.AddArc(from, to)
-		} else {
-			parts := strings.Split(line, " ")
-			if len(parts) != 3 {
-				// Line does not have three elements
-
-				fmt.Println("ERROR: invalid data format")
-				return nil, 0, nil
-			}
-			name := parts[0]
-			first := parts[1]
-			second := parts[2]
-
-			_, err := strconv.Atoi(first)
-			if err != nil {
-				// not an integer
-				fmt.Println("ERROR: invalid data format")
-				return nil, 0, nil
-			}
-			_, err = strconv.Atoi(second)
-			if err != nil {
-				// not an integer
-				fmt.Println("ERROR: invalid data format")
-				return nil, 0, nil
-			}
-			graph.AddRoom(name)
-			numRooms++
-		}
-
-	}
-
-	err = scanner.Err()
-	if err != nil {
-		return nil, 0, err
-	}
-
-	return graph, numRooms, nil
+	return relations,rooms,antNumbers
 }
 
-func (g Graph) AddRoom(name string) {
-	if _, exists := g[name]; !exists {
-		g[name] = []string{}
-	}
-}
 
-func (g Graph) AddArc(from, to string) {
-	g[from] = append(g[from], to)
-	g[to] = append(g[to], from)
-}
-
-func DFS(graph Graph, startRoom string) []string {
+func DFS(graph Relation, startRoom string) []string {
 	visited := make(map[string]bool)
 	dfsTraversal := make([]string, 0)
 
@@ -100,14 +30,14 @@ func DFS(graph Graph, startRoom string) []string {
 	return dfsTraversal
 }
 
-func dfsRecursive(graph Graph, room string, visited map[string]bool, traversal *[]string) {
+func dfsRecursive(graph Relation, room string, visited map[string]bool, traversal *[]string) {
 	visited[room] = true
 	*traversal = append(*traversal, room)
 
 	neighbors := graph[room]
 	for _, neighbor := range neighbors {
-		if !visited[neighbor] {
-			dfsRecursive(graph, neighbor, visited, traversal)
+		if !visited[neighbor.Neighbor] {
+			dfsRecursive(graph, neighbor.Neighbor, visited, traversal)
 		}
 	}
 }

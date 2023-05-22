@@ -14,7 +14,6 @@ type RelationAndDistance struct {
 
 type Relation map[string][]RelationAndDistance
 
-
 func GetRelations(filename string,rooms []Room)Relation {
 	relations:= Relation{}
 	content, err := os.ReadFile(filename)
@@ -74,13 +73,13 @@ func peekRoom(name string, rooms []Room)Room{
 	return Room{}
 }
 
-func ContainsRelation (value string, arr[]string)bool{
-	for _,v:=range arr{
-		if value == v{
-			return true
+func PeekStartRoom(rooms []Room)Room{
+	for _,v:=range rooms{
+		if v.RoomType=="start"{
+			return v
 		}
 	}
-	return false
+	return Room{}
 }
 
 
@@ -89,7 +88,6 @@ func getDistance(room1 Room,room2 Room) int{
 	x2 := room2.X
 	y1 := room1.Y
 	y2 := room2.Y
-
 	dx := math.Pow(float64(x1-x2),2)
 	dy :=  math.Pow(float64(y1-y2),2)
 	distance := math.Sqrt(dx+dy)

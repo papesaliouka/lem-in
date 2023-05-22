@@ -21,8 +21,6 @@ func GetRooms(filename string) []Room {
 		fmt.Println(err)
 	}
 
-	
-
 	lines := strings.Split(string(content), "\n")
 	if !strings.Contains(strings.Join(lines, "\n"),"##start"){
 		fmt.Println("ERROR: invalid data format,No start room found")
@@ -73,7 +71,7 @@ func makeRoom(parts []string,lines []string,i int)Room{
 		fmt.Println("ERROR: invalid data format,Invalid coordinates")
 		os.Exit(1)
 	}
-	roomType:=""
+	roomType:="normal"
 
 	if i-1 >=0 && i-1 <len(lines){
 		if lines[i-1]== "##start"{
@@ -98,4 +96,18 @@ func Contains (value Room, arr[]Room)bool{
 		}
 	}
 	return false
+}
+
+func GetAntsNumber(filename string)int{
+	content, err := os.ReadFile(filename)
+	if err != nil {
+		fmt.Println(err)
+	}
+	lines := strings.Split(string(content), "\n")
+	antNum,err := strconv.Atoi(lines[0])
+	if err !=nil || antNum <=0 {
+		fmt.Println("ERROR: invalid data format, Invalid Ants number")
+		os.Exit(1)
+	}
+	return antNum
 }

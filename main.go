@@ -12,10 +12,9 @@ func main() {
 
 	if len(args)>0{
 		filename := args[0]
-
-		rooms := helper.GetRooms(filename)	
-		relations:= helper.GetRelations(filename,rooms)
-		fmt.Println(relations)
+		relations,rooms,_ :=helper.ParseInputFile(filename)
+		table := helper.DFS(relations,helper.PeekStartRoom(rooms).Name)
+		fmt.Println(table)
 	}
 
 }
