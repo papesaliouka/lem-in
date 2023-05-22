@@ -3,33 +3,19 @@ package main
 import (
 	"fmt"
 	"lemin/helper"
+	"os"
 )
 
 func main() {
-	// graph, _, err := helper.ParseInputFile("input.txt")
-	// if err != nil {
-	// 	fmt.Println("Error parsing input file:", err)
-	// 	return
-	// }
-	rooms := helper.GetRooms("input.txt")
-	fmt.Println(rooms)
 
-	relations:= helper.GetRelations("input.txt",rooms)
-	fmt.Println(relations)
+	args := os.Args[1:]
 
-	// table := helper.DFS(graph, rooms[0].Name)
+	if len(args)>0{
+		filename := args[0]
 
-	// if numRooms != len(table) {
-	// 	fmt.Println("ERROR: Invalid data format")
-	// 	return
-	// }
-
-	// for room, neighbors := range graph {
-	// 	fmt.Printf("Room: %s, Neighbors: ", room)
-	// 	for _, neighbor := range neighbors {
-	// 		fmt.Printf("%s ", neighbor)
-	// 	}
-	// 	fmt.Println()
-	// }
+		rooms := helper.GetRooms(filename)	
+		relations:= helper.GetRelations(filename,rooms)
+		fmt.Println(relations)
+	}
 
 }
