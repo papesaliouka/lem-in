@@ -29,7 +29,7 @@ func GetRelations(filename string,rooms []Room)Relation {
 
 				if parts[0]==parts[1]{
 					fmt.Println("ERROR: invalid data format,a room can't link to himself")
-					os.Exit(1)
+					os.Exit(0)
 				}
 
 				room1:= peekRoom(parts[0],rooms)
@@ -48,7 +48,7 @@ func GetRelations(filename string,rooms []Room)Relation {
 
 			}else{
 				fmt.Println("ERROR: invalid data format,Link to unknown room")
-				os.Exit(1)
+				os.Exit(0)
 			}
 		}
 	}

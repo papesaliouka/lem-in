@@ -30,7 +30,7 @@ func DFS(graph Relation, startRoom string) []string {
 	return dfsTraversal
 }
 
-func dfsRecursive(graph Relation, room string, visited map[string]bool, traversal *[]string) {
+func dfsRecursive(graph Relation, room string, visited map[string]bool, traversal *[]string,) {
 	visited[room] = true
 	*traversal = append(*traversal, room)
 

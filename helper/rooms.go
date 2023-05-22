@@ -24,11 +24,11 @@ func GetRooms(filename string) []Room {
 	lines := strings.Split(string(content), "\n")
 	if !strings.Contains(strings.Join(lines, "\n"),"##start"){
 		fmt.Println("ERROR: invalid data format,No start room found")
-		os.Exit(1)
+		os.Exit(0)
 	}
 	if !strings.Contains(strings.Join(lines,"\n"),"##end"){
 		fmt.Println("ERROR: invalid data format,No end room found")
-		os.Exit(1)
+		os.Exit(0)
 	}
 
 	startCount :=strings.Count(strings.Join(lines, "\n"),"##start")
@@ -36,7 +36,7 @@ func GetRooms(filename string) []Room {
 
 	if startCount >1 || endCount >1{
 		fmt.Println("ERROR: invalid data format, More than one start/end command found")
-		os.Exit(1)
+		os.Exit(0)
 	}
 
 	for i, line := range lines {
@@ -47,7 +47,7 @@ func GetRooms(filename string) []Room {
 				rooms = append(rooms, room)
 			}else{
 				fmt.Println("ERROR: invalid data format,Duplicated Room")
-				os.Exit(1)
+				os.Exit(0)
 			}
 		}
 	}
@@ -58,18 +58,18 @@ func makeRoom(parts []string,lines []string,i int)Room{
 	name:= parts[0]
 	if string(name[0])=="L"{
 		fmt.Println("ERROR: invalid data format,Name should never start with L")
-		os.Exit(1)
+		os.Exit(0)
 	}
 	x,err := strconv.Atoi(parts[1])
 	if err !=nil{
 		fmt.Println("ERROR: invalid data format,Invalid coordinates")
-		os.Exit(1)
+		os.Exit(0)
 	}
 
 	y,err := strconv.Atoi(parts[2])
 	if err !=nil{
 		fmt.Println("ERROR: invalid data format,Invalid coordinates")
-		os.Exit(1)
+		os.Exit(0)
 	}
 	roomType:="normal"
 
@@ -102,12 +102,13 @@ func GetAntsNumber(filename string)int{
 	content, err := os.ReadFile(filename)
 	if err != nil {
 		fmt.Println(err)
+		os.Exit(0)
 	}
 	lines := strings.Split(string(content), "\n")
 	antNum,err := strconv.Atoi(lines[0])
 	if err !=nil || antNum <=0 {
 		fmt.Println("ERROR: invalid data format, Invalid Ants number")
-		os.Exit(1)
+		os.Exit(0)
 	}
 	return antNum
 }
