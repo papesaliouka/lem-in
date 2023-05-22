@@ -6,19 +6,23 @@ import (
 )
 
 func main() {
-	graph, numRooms, err := helper.ParseInputFile("input.txt")
-	if err != nil {
-		fmt.Println("Error parsing input file:", err)
-		return
-	}
+	// graph, _, err := helper.ParseInputFile("input.txt")
+	// if err != nil {
+	// 	fmt.Println("Error parsing input file:", err)
+	// 	return
+	// }
 	rooms := helper.GetRooms("input.txt")
+	fmt.Println(rooms)
 
-	table := helper.DFS(graph, rooms[0].Name)
+	relations:= helper.GetRelations("input.txt",rooms)
+	fmt.Println(relations)
 
-	if numRooms != len(table) {
-		fmt.Println("ERROR: Invalid data format")
-		return
-	}
+	// table := helper.DFS(graph, rooms[0].Name)
+
+	// if numRooms != len(table) {
+	// 	fmt.Println("ERROR: Invalid data format")
+	// 	return
+	// }
 
 	// for room, neighbors := range graph {
 	// 	fmt.Printf("Room: %s, Neighbors: ", room)

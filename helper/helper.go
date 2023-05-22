@@ -3,7 +3,6 @@ package helper
 import (
 	"bufio"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"strconv"
 	"strings"
@@ -11,40 +10,7 @@ import (
 
 type Graph map[string][]string
 
-type Room struct {
-	Name     string
-	RoomType string
-}
 
-func GetRooms(filename string) []Room {
-	rooms := []Room{}
-	content, err := ioutil.ReadFile(filename)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	lines := strings.Split(string(content), "\n")
-	for i, line := range lines {
-		if strings.Contains(line, "-") {
-			continue
-		}
-		if line == "##start" {
-			room := Room{
-				Name:     string(lines[i+1][0]),
-				RoomType: "start",
-			}
-			rooms = append(rooms, room)
-		}
-		if line == "##end" {
-			room := Room{
-				Name:     string(lines[i+1][0]),
-				RoomType: "end",
-			}
-			rooms = append(rooms, room)
-		}
-	}
-	return rooms
-}
 
 func ParseInputFile(filename string) (Graph, int, error) {
 	file, err := os.Open(filename)
@@ -61,7 +27,7 @@ func ParseInputFile(filename string) (Graph, int, error) {
 
 	for scanner.Scan() {
 		line := scanner.Text()
-		if line == "##start" || line == "#" || line == "##end" {
+		if line == "##start" || strings.ContainsAny(line,"#") || line == "##end" {
 			continue
 		}
 
