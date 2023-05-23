@@ -33,11 +33,10 @@ func DFS(graph Relation, startRoom string) []string {
 func dfsRecursive(graph Relation, room string, visited map[string]bool, traversal *[]string,) {
 	visited[room] = true
 	*traversal = append(*traversal, room)
-
 	neighbors := graph[room]
 	for _, neighbor := range neighbors {
-		if !visited[neighbor.Neighbor] {
-			dfsRecursive(graph, neighbor.Neighbor, visited, traversal)
+		if !visited[neighbor.Name] {
+			dfsRecursive(graph, neighbor.Name, visited, traversal)
 		}
 	}
 }

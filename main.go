@@ -17,14 +17,16 @@ func main() {
 		table:= helper.DFS(relations,helper.PeekStartRoom(rooms).Name)
 		// neeed to add another check to see if at least start and end are connected 
 		// if all the nodes are not connected
-		// Need to check as well if there are cycle in the graph 
-		// but don't know how to do that yet
-		if len(table)==len(rooms){
-			fmt.Println(table)
-		}else{
+		if len(table)!=len(rooms){
 			fmt.Println("ERROR: invalid data format,a not all rooms are connected")
+			os.Exit(0)
 		}
+		
+		start:=helper.PeekStartRoom(rooms).Name
+		end:=helper.PeekEndRoom(rooms).Name
 
+		dist,path:=helper.Dijkstra(relations,start,end)
+		fmt.Println(dist,path)
 	}
 
 }

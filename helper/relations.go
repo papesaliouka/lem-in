@@ -8,7 +8,7 @@ import (
 )
 
 type RelationAndDistance struct {
-	Neighbor string
+	Name string
 	Distance int
 }
 
@@ -37,12 +37,12 @@ func GetRelations(filename string,rooms []Room)Relation {
 				distance := getDistance(room1,room2)
 
 				relations[room1.Name]=  append(relations[room1.Name], RelationAndDistance{
-					Neighbor:room2.Name ,
+					Name:room2.Name ,
 					Distance: distance,
 				})
 
 				relations[room2.Name]= append(relations[room2.Name], RelationAndDistance{
-					Neighbor: room1.Name,
+					Name: room1.Name,
 					Distance: distance,
 				})
 
@@ -81,6 +81,16 @@ func PeekStartRoom(rooms []Room)Room{
 	}
 	return Room{}
 }
+
+func PeekEndRoom(rooms []Room)Room{
+	for _,v:=range rooms{
+		if v.RoomType=="end"{
+			return v
+		}
+	}
+	return Room{}
+}
+
 
 
 func getDistance(room1 Room,room2 Room) int{
