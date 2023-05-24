@@ -8,7 +8,6 @@ import (
 
 func main() {
 
-
 	args := os.Args[1:]
 
 	if len(args)>0{
@@ -21,12 +20,20 @@ func main() {
 			fmt.Println("ERROR: invalid data format,a not all rooms are connected")
 			os.Exit(0)
 		}
-		
+
 		start:=helper.PeekStartRoom(rooms).Name
 		end:=helper.PeekEndRoom(rooms).Name
 
-		dist,path:=helper.Dijkstra(relations,start,end)
-		fmt.Println(dist,path)
-	}
+		fmt.Println(relations)
 
+		allPaths := helper.FindAllPaths(relations,start,end)
+
+		for _,path:=range allPaths{
+			length,_:=helper.GetPathLength(relations,path)
+			fmt.Println(length,path)
+		}
+	
+
+		
+	}
 }
