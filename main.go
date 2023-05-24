@@ -24,14 +24,16 @@ func main() {
 		start:=helper.PeekStartRoom(rooms).Name
 		end:=helper.PeekEndRoom(rooms).Name
 
-		fmt.Println(relations)
-
 		allPaths := helper.FindAllPaths(relations,start,end)
 
-		for _,path:=range allPaths{
-			length,_:=helper.GetPathLength(relations,path)
-			fmt.Println(length,path)
-		}
+		fmt.Println(allPaths)
+
+		fmt.Println(helper.ValidatePaths(allPaths))
+
+		// for _,path:=range allPaths{
+		// 	length,_:=helper.GetPathLength(relations,path)
+		// 	fmt.Println(length,path)
+		// }
 	
 
 		
