@@ -26,16 +26,26 @@ func main() {
 
 		allPaths := helper.FindAllPaths(relations,start,end)
 
-		fmt.Println(allPaths)
 
-		fmt.Println(helper.ValidatePaths(allPaths))
+		fmt.Println("All possible paths")
+		for _,path:=range allPaths{
+			
+			length,_:=helper.GetPathLength(relations,path)
+			fmt.Println(length,path)
 
-		// for _,path:=range allPaths{
-		// 	length,_:=helper.GetPathLength(relations,path)
-		// 	fmt.Println(length,path)
-		// }
-	
-
+		}
 		
+		fmt.Println("-------------------")
+
+		nonCrossing:= helper.FindNonCrossingPaths(allPaths)
+
+		fmt.Println("valid paths")
+		for _,valid:= range nonCrossing{
+
+			length,_:=helper.GetPathLength(relations,valid)
+			fmt.Println(length,valid)
+
+		}
+		fmt.Println("---------------------")
 	}
 }

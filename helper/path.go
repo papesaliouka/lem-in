@@ -2,105 +2,62 @@ package helper
 
 import (
 	"fmt"
-	"strings"
 )
 
 
-func ValidatePaths(paths [][]string) [][]string {
-	validPaths:= [][]string{}
-	store := map[string][]string{}
-	listStr:=[]string{}
 
-	groups:= map[string][]string{}
+func hasCrossing(path1, path2 []string) bool {
+	// Iterate through each segment of path1
+	for i := 1; i < len(path1)-1; i++ {
+		segment1Start := path1[i-1]
+		segment1End := path1[i]
 
-	for _,path:= range paths{
-		pathCopy:=path
-		pathStr := strings.Join(path[1:len(path)-1], "")
-		listStr = append(listStr,pathStr)
-		store[pathStr]=pathCopy
-	}
+		// Iterate through each segment of path2
+		for j := 1; j < len(path2)-1; j++ {
+			segment2Start := path2[j-1]
+			segment2End := path2[j]
 
-	for _,v:=range listStr{
-		groups[string(v[0])]= append(groups[string(v[0])], v)
-	}
-
-	candidatesKeys:=[]string{}
-
-	for k := range groups {targets,sources := GetTargetsAndSources(groups,k)
-		for _,word:=range sources{
-			key,isValid:=IsValidKeys(word,targets)
-			if isValid{
-				candidatesKeys = append(candidatesKeys, key)
+			// Check if the two segments intersect
+			if segment1Start == segment2End && segment1End == segment2Start {
+				return true // Crosses found
 			}
 		}
 	}
 
-	finalGroup:=map[string][]string{}
-
-	for i,cand := range candidatesKeys{
-		finalGroup[string(candidatesKeys[i][0])]=append(finalGroup[string(candidatesKeys[i][0])], cand)
-	}
-
-	fmt.Println(finalGroup)
-
-	return validPaths
+	return false // No crosses found
 }
 
+func FindNonCrossingPaths(paths [][]string) [][]string {
+	var nonCrossingPaths [][]string
 
-func finalValidation(candidates []string)[]string{
-	selected:=[]string{}
+	// Iterate through each path
+	for i := 0; i < len(paths); i++ {
+		path1 := paths[i]
+		isCrossing := false
 
-	for _,cand := range candidates{
-		for _,cand2:= range candidates{
-			if cand2 !=cand{
-				if !contains(cand,cand2){
-					selected = append(selected, cand2)
+		// Check if path1 crosses any other paths
+		for j := 0; j < len(paths); j++ {
+			if i != j {
+				path2 := paths[j]
+				if hasCrossing(path1, path2) {
+					isCrossing = true
+					break
 				}
 			}
 		}
-	}
-	fmt.Println(selected)
-	return selected
-}
 
-func GetTargetsAndSources(group map[string][]string ,key string)([]string,[]string){
-	targets := []string{}
-	sources:=group[key]
-
-	for k,arr:= range group{
-		if k !=key{
-			targets = append(targets, arr...)
-		}
-	}
-	return targets,sources
-}
-
-func IsValidKeys(src string , targets []string ) (string,bool){
-	valid :=[]string{}
-	for _,destWord :=range targets{
-		if contains(src,destWord){
-			continue
-		}else{
-			valid = append(valid, src)
+		// If path1 does not cross any other paths, add it to nonCrossingPaths
+		if !isCrossing {
+			nonCrossingPaths = append(nonCrossingPaths, path1)
 		}
 	}
 
-	if len(valid)>0{
-		return valid[0],true
-	}
-
-	return "",false
-	
+	return nonCrossingPaths
 }
 
-func contains(src ,target string)bool{
-	for _,v:=range src{
-		if strings.Contains(target,string(v)){
-			return true
-		}
-	}
-	return false
-}
+
+
+
 
 
 
