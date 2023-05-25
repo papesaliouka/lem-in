@@ -50,7 +50,13 @@ func FindNonCrossingPaths(paths [][]string) [][]string {
 		}
 	}
 
-	return nonCrossingPaths
+	// remove start
+	trimmedPath:= [][]string{} 
+	for _,v:= range nonCrossingPaths{
+		trimmedPath = append(trimmedPath, v[1:])
+	}
+	
+	return trimmedPath	
 }
 
 func GetPathLength(adjList Relation, path []string) (int, error) {
