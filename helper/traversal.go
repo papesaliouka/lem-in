@@ -1,15 +1,40 @@
 package helper
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type AntPaths map[int][]string
+
+func ValidateStartingConnections(startConnections []RelationAndDistance, nonCrossing [][]string) int {
+
+	connections :=0
+	starts := []string{}
+
+	nonCrossingStarter:=[]string{}
+
+	for _,v:=range startConnections{
+		starts = append(starts, v.Name)
+	}
+
+	for _,v:=range nonCrossing{
+		nonCrossingStarter = append(nonCrossingStarter, v[0])
+	}
+
+	for _,v:=range starts{
+		if contains(v,nonCrossingStarter){
+			connections++
+		}
+	}
+
+return connections
+}
 
 func BigTraversal(connections int,paths [][]string,ants int){
 	canMove:=[]int{}
 	antPaths := giveEachAntHisPath(ants,paths)
-	updater:=connections
 	maxMove:=0
-	minMove:= len(paths[0])
+	minMove:= connections
 
 	for _,v:=range paths{
 		maxMove+=len(v)
@@ -19,49 +44,55 @@ func BigTraversal(connections int,paths [][]string,ants int){
 		canMove = append(canMove, i)
 	}
 
-	fmt.Println(canMove)
-
 	step:=1
+	lastIndex := len(canMove)-1
+	last:= canMove[lastIndex]
 
-	for updater <=ants{
-		makeAStep(&canMove,ants,antPaths)
-		canMove = append(canMove, updater)
-		fmt.Println()
-		updateCanMove(canMove[len(canMove)-1],step,minMove,maxMove,&canMove)
-		updater++
+	for len(canMove)>0{		
+		last = makeAStep(&canMove,ants,&antPaths,last, step,maxMove,minMove)
 		step++
 	}
-
 }
 
-func updateCanMove(lastValue, step,maxMove, minMove int, canMove *[]int){
-	if len(*canMove) <= maxMove{
-		goal := lastValue + (minMove*step)
-			for i:=lastValue+1; i<=goal;i++{
+func updateCanMove(lastValue, step,maxMove, minMove ,ants int ,canMove *[]int)int {
+//	if len(*canMove) <= maxMove  {
+		goal := lastValue + (minMove * step)
+		for i:=lastValue+1; i<=goal;i++{
+			if !containsAnt(i, canMove) && i<=ants {
 				*canMove= append(*canMove, i)
+				lastValue = i
 			}
-		} 
+		}
+	//}
+	return lastValue 
 }
 
-
-func makeAmove(move string, antNumb int ){
-	fmt.Printf("L%d-%s ",antNumb,move)
-}
-
-func makeAStep(canMove *[]int, ants int, antPaths AntPaths){
-	for i,v:=range *canMove{
-		pat := antPaths[v]
+func makeAStep(canMove *[]int, ants int, antPaths *AntPaths,lastValue,step,maxMove,minMove int) int{
+	for _,v:=range *canMove{
+		pat := (*antPaths)[v]
 		if len(pat)>0{
 			move := pat[0]
 			makeAmove(move,v)
 			pat= pat[1:]
-			antPaths[v]=pat
-		}else{
+			(*antPaths)[v]=pat
+		}
+	}
+
+	for i,v:=range *canMove{
+		pat := (*antPaths)[v]
+		if len(pat)==0{
 			if i<len(*canMove){
-				*canMove = append((*canMove)[:i],(*canMove)[i+1:]...)
+			 	*canMove = append((*canMove)[:i],(*canMove)[i+1:]...)
 			}
 		}
 	}
+
+	if len(*canMove)>0{
+		fmt.Println()
+		lastValue=updateCanMove(lastValue,step,maxMove,minMove,ants,canMove)
+	}
+
+	return lastValue
 }
 
 func giveEachAntHisPath(ants int, paths [][]string) AntPaths {
@@ -72,5 +103,27 @@ func giveEachAntHisPath(ants int, paths [][]string) AntPaths {
 		antPaths[i]=paths[pathIndex]
 	}
 	return antPaths
+}
+
+func containsAnt(ant int, ants *[]int)bool{
+	for _,v:= range *ants{
+		if v==ant{
+			return true
+		}
+	}
+	return false
+}
+
+func contains(ant string, ants []string)bool{
+	for _,v:= range ants{
+		if v ==ant{
+			return true
+		}
+	}
+	return false
+}
+
+func makeAmove(move string, antNumb int ){
+	fmt.Printf("L%d-%s ",antNumb,move)
 }
 

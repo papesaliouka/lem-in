@@ -26,11 +26,8 @@ func main() {
 		end:=helper.PeekEndRoom(rooms).Name
 		allPaths := helper.FindAllPaths(relations,start,end)
 		nonCrossing:= helper.FindNonCrossingPaths(allPaths)
-
-		fmt.Println(nonCrossing)
-
-		connextions := len(relations[start])
-
+		connextions := helper.ValidateStartingConnections(relations[start],nonCrossing)
+		
 		helper.BigTraversal(connextions,nonCrossing,ants)
 	}
 }
