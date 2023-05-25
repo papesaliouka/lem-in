@@ -4,8 +4,6 @@ import (
 	"fmt"
 )
 
-
-
 func hasCrossing(path1, path2 []string) bool {
 	// Iterate through each segment of path1
 	for i := 1; i < len(path1)-1; i++ {
@@ -55,12 +53,6 @@ func FindNonCrossingPaths(paths [][]string) [][]string {
 	return nonCrossingPaths
 }
 
-
-
-
-
-
-
 func GetPathLength(adjList Relation, path []string) (int, error) {
 	length := 0
 
@@ -91,7 +83,6 @@ func GetPathLength(adjList Relation, path []string) (int, error) {
 
 	return length, nil
 }
-
 
 func FindAllPaths(adjList Relation, start, end string) [][]string {
 	visited := make(map[string]bool)
