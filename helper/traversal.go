@@ -5,49 +5,42 @@ import "fmt"
 type AntPaths map[int][]string
 
 func BigTraversal(connections int,paths [][]string,ants int){
-	pathIndex:=0
 	canMove:=[]int{}
-	maxMovePerTurn:=0
+	antPaths := giveEachAntHisPath(ants,paths)
+	updater:=connections
+	maxMove:=0
+	minMove:= len(paths[0])
+
+	for _,v:=range paths{
+		maxMove+=len(v)
+	}
 
 	for i:=1; i<=connections;i++{
 		canMove = append(canMove, i)
 	}
 
-	for j:=0;j<len(paths);j++{
-		maxMovePerTurn += len(paths[j])
-	}
+	fmt.Println(canMove)
 
-	fmt.Println(maxMovePerTurn)
-
-	for i:=1;i<=ants;i++{
-		pathIndex = (pathIndex +1) % len(paths) 
-	}
-
-	antPaths := giveEachAntHisPath(ants,paths)
-
-
-	updater:=connections
+	step:=1
 
 	for updater <=ants{
-		updater++
+		makeAStep(&canMove,ants,antPaths)
 		canMove = append(canMove, updater)
-	}
-
- 	i:=0
-	for {
-		makeAStep(canMove,ants,antPaths)
 		fmt.Println()
-		if i==8 {
-			break
-		}
-		i++
+		updateCanMove(canMove[len(canMove)-1],step,minMove,maxMove,&canMove)
+		updater++
+		step++
 	}
 
+}
 
-
-
-
-
+func updateCanMove(lastValue, step,maxMove, minMove int, canMove *[]int){
+	if len(*canMove) <= maxMove{
+		goal := lastValue + (minMove*step)
+			for i:=lastValue+1; i<=goal;i++{
+				*canMove= append(*canMove, i)
+			}
+		} 
 }
 
 
@@ -55,14 +48,18 @@ func makeAmove(move string, antNumb int ){
 	fmt.Printf("L%d-%s ",antNumb,move)
 }
 
-func makeAStep(canMove []int, ants int, antPaths AntPaths){
-	for _,v:=range canMove{
+func makeAStep(canMove *[]int, ants int, antPaths AntPaths){
+	for i,v:=range *canMove{
 		pat := antPaths[v]
 		if len(pat)>0{
 			move := pat[0]
 			makeAmove(move,v)
 			pat= pat[1:]
 			antPaths[v]=pat
+		}else{
+			if i<len(*canMove){
+				*canMove = append((*canMove)[:i],(*canMove)[i+1:]...)
+			}
 		}
 	}
 }
