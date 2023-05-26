@@ -55,15 +55,13 @@ func BigTraversal(connections int,paths [][]string,ants int){
 }
 
 func updateCanMove(lastValue, step,maxMove, minMove ,ants int ,canMove *[]int)int {
-//	if len(*canMove) <= maxMove  {
-		goal := lastValue + (minMove * step)
-		for i:=lastValue+1; i<=goal;i++{
-			if !containsAnt(i, canMove) && i<=ants {
-				*canMove= append(*canMove, i)
-				lastValue = i
-			}
+	goal := lastValue + minMove 
+	for i:=lastValue+1; i<=goal;i++{
+		if !containsAnt(i, canMove) && i<=ants &&len(*canMove)<=maxMove {
+			*canMove= append(*canMove, i)
+			lastValue = i
 		}
-	//}
+	}
 	return lastValue 
 }
 

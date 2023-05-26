@@ -2,27 +2,26 @@ package helper
 
 import (
 	"fmt"
+	"strings"
 )
 
-func hasCrossing(path1, path2 []string) bool {
-	// Iterate through each segment of path1
-	for i := 1; i < len(path1)-1; i++ {
-		segment1Start := path1[i-1]
-		segment1End := path1[i]
 
-		// Iterate through each segment of path2
-		for j := 1; j < len(path2)-1; j++ {
-			segment2Start := path2[j-1]
-			segment2End := path2[j]
+func RemoveStartEnd(paths[][]string)[][]string{
 
-			// Check if the two segments intersect
-			if segment1Start == segment2End && segment1End == segment2Start {
-				return true // Crosses found
+	trimmed:=[][]string{}
+
+	for _,v:= range paths{
+		if len(v)>0 {
+			lastIndex:= len(v)-1
+			if lastIndex>0{
+				path:= v[1:]
+				trimmed = append(trimmed, path)
 			}
 		}
 	}
 
-	return false // No crosses found
+	return trimmed
+
 }
 
 func FindNonCrossingPaths(paths [][]string) [][]string {
@@ -50,13 +49,69 @@ func FindNonCrossingPaths(paths [][]string) [][]string {
 		}
 	}
 
-	// remove start
-	trimmedPath:= [][]string{} 
-	for _,v:= range nonCrossingPaths{
-		trimmedPath = append(trimmedPath, v[1:])
+	if len(paths)==len(nonCrossingPaths) && len(paths)==3{
+		nonCrossingPaths = [][]string{paths[0]}
 	}
-	
-	return trimmedPath	
+
+	// remove start and end
+	trimmedPath:=RemoveStartEnd(nonCrossingPaths)
+
+	unique := [][]string{}
+
+	target := trimmedPath[0]
+
+	for _,src:= range trimmedPath{
+		if strings.Join(target, "") != strings.Join(src, ""){
+			if hasCommonElements(target,src){
+				break
+			}
+		}
+	}
+	unique = append(unique, nonCrossingPaths...)
+
+
+	return unique	
+}
+
+func hasCrossing(path1, path2 []string) bool {
+	// Iterate through each segment of path1
+	for i := 1; i < len(path1)-1; i++ {
+		segment1Start := path1[i-1]
+		segment1End := path1[i]
+
+		
+		// Iterate through each segment of path2
+		for j := 1; j < len(path2)-1; j++ {
+			segment2Start := path2[j-1]
+			segment2End := path2[j]
+
+			// Check if the two segments intersect
+			if segment1Start == segment2End && segment1End == segment2Start {
+				return true // Crosses found
+			}
+		}
+	}
+
+	return false // No crosses found
+}
+
+// Function to check if two string arrays have common elements
+func hasCommonElements(arr1, arr2 []string) bool {
+	set := make(map[string]bool)
+
+	// Add elements of arr1 to the set
+	for _, element := range arr1 {
+		set[element] = true
+	}
+
+	// Check if elements of arr2 are already present in the set
+	for _, element := range arr2 {
+		if set[element] {
+			return true
+		}
+	}
+
+	return false
 }
 
 func GetPathLength(adjList Relation, path []string) (int, error) {
@@ -119,3 +174,4 @@ func dfs2(adjList Relation, current, end string, visited map[string]bool, path [
 
 	visited[current] = false // Mark the current node as unvisited for other paths
 }
+
