@@ -7,29 +7,6 @@ import (
 type Group map[string][][]string
 
 
-func GenerateCombinations(thePromised []string, sources [][]string, targets [][]string) [][][]string {
-	combinations := [][][]string{}
-
-	for range thePromised {
-		for _, target := range targets {
-			for _, source := range sources {
-				if (!HasCommonElements(thePromised,source)) && 
-				!(HasCommonElements(thePromised,target)){
-					combination := [][]string{
-						thePromised,
-						target,
-						source,
-					}
-					combinations = append(combinations, combination)
-				}
-			}
-		}
-	}
-
-	return combinations
-}
-
-
 
 func getSourcesAndTargets(groups Group, key string)([][]string,[][]string){
 	sources := groups[key]
@@ -78,7 +55,7 @@ func GetEligeables(shortestOfAll []string,groups Group) [][]string{
 
 	for _,paths:= range groups{
 			for _,path:=range paths{
-				if !HasCommonElements(shortestOfAll,path){
+				if !HasCommonElements(shortestOfAll[:len(shortestOfAll)-1],path[:len(path)-1]){
 					eligeables = append(eligeables, path)
 				}
 			}
