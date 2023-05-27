@@ -25,9 +25,13 @@ func ParseInputFile(filename string) (Relation,[]Room, int) {
 	}
 	defer file.Close()
 
+	content,_:= os.ReadFile(filename)
+
 	antNumbers :=GetAntsNumber(filename) 
 	rooms := GetRooms(filename)
 	relations :=GetRelations(filename,rooms)
+
+	fmt.Println(string(content),"\n")
 
 	return relations,rooms,antNumbers
 }

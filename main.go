@@ -18,7 +18,7 @@ func main() {
 		table:= helper.DFS(relations,helper.PeekStartRoom(rooms).Name)
 
 		// neeed to add another check to see if at least start and end are connected 
-		// if all the nodes are not connected
+		// if all the nodes are not connected ps: not mandatory we can do fine withoout it
 		if len(table)!=len(rooms){
 			fmt.Println("ERROR: invalid data format,a not all rooms are connected")
 			os.Exit(0)
