@@ -26,17 +26,16 @@ func Elector(eligeables [][]string, thePromised []string, found int, min int, el
 				if key != thePromised[0] {
 					_, flat := Flat2DArray(subPath)
 					if len(flat) > 0 && len(flat) < min {
-						choosen = subPath
-						if len(subPath) > 1 {
-							for _, val := range subPath {
-								if !HasCommonElements(thePromised, val) {
-									choosen = [][]string{val}
-								}
+						for _,sub:=range subPath{
+							if !HasCommonElements(sub,thePromised){
+								choosen = [][]string{sub}
+								break
 							}
 						}
 					}
 				}
 			}
+
 			elected = append(elected, choosen...)
 
 		}
