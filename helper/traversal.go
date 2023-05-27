@@ -31,26 +31,28 @@ return connections
 }
 
 func BigTraversal(connections int,paths [][]string,ants int){
-	canMove:=[]int{}
-	antPaths := giveEachAntHisPath(ants,paths)
-	maxMove:=0
-	minMove:= connections
-
-	for _,v:=range paths{
-		maxMove+=len(v)
-	}
-
-	for i:=1; i<=connections;i++{
-		canMove = append(canMove, i)
-	}
-
-	step:=1
-	lastIndex := len(canMove)-1
-	last:= canMove[lastIndex]
-
-	for len(canMove)>0{		
-		last = makeAStep(&canMove,ants,&antPaths,last, step,maxMove,minMove)
-		step++
+	if len(paths)>0{
+		canMove:=[]int{}
+		antPaths := giveEachAntHisPath(ants,paths)
+		maxMove:=0
+		minMove:= connections
+	
+		for _,v:=range paths{
+			maxMove+=len(v)
+		}
+	
+		for i:=1; i<=connections;i++{
+			canMove = append(canMove, i)
+		}
+	
+		step:=1
+		lastIndex := len(canMove)-1
+		last:= canMove[lastIndex]
+	
+		for len(canMove)>0{		
+			last = makeAStep(&canMove,ants,&antPaths,last, step,maxMove,minMove)
+			step++
+		}
 	}
 }
 
@@ -94,13 +96,16 @@ func makeAStep(canMove *[]int, ants int, antPaths *AntPaths,lastValue,step,maxMo
 }
 
 func giveEachAntHisPath(ants int, paths [][]string) AntPaths {
-	antPaths := AntPaths{}
-	pathIndex:=0
-	for i:= 1; i<=ants ;i++{
-		pathIndex = (pathIndex +1) % len(paths)
-		antPaths[i]=paths[pathIndex]
+	if len(paths)>0{
+		antPaths := AntPaths{}
+		pathIndex:=0
+		for i:= 1; i<=ants  ;i++{
+			pathIndex = (pathIndex +1) % len(paths)
+			antPaths[i]=paths[pathIndex]
+		}
+		return antPaths
 	}
-	return antPaths
+	return AntPaths{}
 }
 
 func containsAnt(ant int, ants *[]int)bool{

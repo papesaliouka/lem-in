@@ -1,12 +1,123 @@
 package helper
 
-import "fmt"
-
-
+import (
+	"math"
+)
 
 type Group map[string][][]string
 
 
+func GenerateCombinations(thePromised []string, sources [][]string, targets [][]string) [][][]string {
+	combinations := [][][]string{}
+
+	for range thePromised {
+		for _, target := range targets {
+			for _, source := range sources {
+				if (!HasCommonElements(thePromised,source)) && 
+				!(HasCommonElements(thePromised,target)){
+					combination := [][]string{
+						thePromised,
+						target,
+						source,
+					}
+					combinations = append(combinations, combination)
+				}
+			}
+		}
+	}
+
+	return combinations
+}
+
+
+
+func getSourcesAndTargets(groups Group, key string)([][]string,[][]string){
+	sources := groups[key]
+	targets :=[][]string{}
+
+	for k,v:=range groups{
+		if k!=key{
+			targets = append(targets, v...)
+		}
+	}
+	return sources,targets
+}
+
+func GenerateAllPossibilities(thePromised []string, eligeables [][]string)[][][]string{
+	groups:= MakeGroups(eligeables)
+	allPossibilities :=[][][]string{}
+
+	for key,_:=range groups{
+		sources,targets:= getSourcesAndTargets(groups,key)
+		allPossibilities= GenerateCombinations(thePromised,targets,sources)
+		break
+	}
+
+	return allPossibilities
+}
+
+
+func GiveTheOneWithMostCandidates(paths[][]string,groups Group)[]string{
+	thePromised:=[]string{}
+	max:= math.MinInt32
+
+	for _,path := range paths{
+		eligeables:=GetEligeables(path,groups)
+		_,flat:=Flat2DArray(eligeables)
+		if len(flat)>max{
+			max = len(flat)
+			thePromised = path
+		}
+	}
+	return thePromised
+}
+
+func GetEligeables(shortestOfAll []string,groups Group) [][]string{
+
+	eligeables := [][]string{}
+
+	for _,paths:= range groups{
+			for _,path:=range paths{
+				if !HasCommonElements(shortestOfAll,path){
+					eligeables = append(eligeables, path)
+				}
+			}
+		
+	}
+	return eligeables
+}
+
+func GetSmallestPathOfEachGroup(groups Group) ([][]string, []string) {
+	smallestPaths := [][]string{}
+	var theSmallestOfAll []string
+	lenSmallestOfAll := math.MaxInt32
+
+	for _, paths := range groups {
+		smallestPath := getSmallestPath(paths)
+		_, flat := Flat2DArray(smallestPaths)
+		if len(flat) < lenSmallestOfAll && len(flat) > 0 {
+			lenSmallestOfAll = len(flat)
+			theSmallestOfAll = smallestPath
+		}
+		smallestPaths = append(smallestPaths, smallestPath)
+	}
+
+	return smallestPaths, theSmallestOfAll
+}
+
+func getSmallestPath(paths [][]string) []string {
+	var smallest []string
+	lenSmall := math.MaxInt32
+
+	for _, path := range paths {
+		if len(path) < lenSmall && len(path) > 0 {
+			lenSmall = len(path)
+			smallest = path
+		}
+	}
+
+	return smallest
+}
 
 
 func MakeGroups(paths[][]string)Group{
@@ -19,49 +130,3 @@ func MakeGroups(paths[][]string)Group{
 	}
 	return groups
 }
-
-func getSourceAndTargets(key string, groups Group)([][]string,[][]string){
-	sources:= groups[key]
-	targets := [][]string{}
-
-	for k,v:=range groups{
-		if k!=key{
-			targets = append(targets, v...)
-		}
-	}
-	return sources,targets
-}
-
-func GetEligeablePaths(groups Group, relations Relation) Group {
-	eligeables := Group{}
-
-	//bigArr:=[][]string{}
-
-	for _,elements:= range groups{
-		nonCrossing:=FindNonCrossingPaths(elements)
-		fmt.Println(nonCrossing)
-	}
-
-
-
-
-
-	return eligeables
-}
-
-
-
-// Function to check if any element of slice1 is present in slice2
-func containsAny(slice1 []string, slice2 []string) bool {
-	set := make(map[string]bool)
-	for _, element := range slice1 {
-		set[element] = true
-	}
-	for _, element := range slice2 {
-		if set[element] {
-			return true
-		}
-	}
-	return false
-}
-

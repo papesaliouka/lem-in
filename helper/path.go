@@ -2,27 +2,7 @@ package helper
 
 import (
 	"fmt"
-	"strings"
 )
-
-
-func RemoveStartEnd(paths[][]string)[][]string{
-
-	trimmed:=[][]string{}
-
-	for _,v:= range paths{
-		if len(v)>0 {
-			lastIndex:= len(v)-1
-			if lastIndex>0{
-				path:= v[1:]
-				trimmed = append(trimmed, path)
-			}
-		}
-	}
-
-	return trimmed
-
-}
 
 func FindNonCrossingPaths(paths [][]string) [][]string {
 	var nonCrossingPaths [][]string
@@ -54,23 +34,8 @@ func FindNonCrossingPaths(paths [][]string) [][]string {
 	}
 
 	// remove start and end
-	trimmedPath:=RemoveStartEnd(nonCrossingPaths)
 
-	unique := [][]string{}
-
-	target := trimmedPath[0]
-
-	for _,src:= range trimmedPath{
-		if strings.Join(target, "") != strings.Join(src, ""){
-			if hasCommonElements(target,src){
-				break
-			}
-		}
-	}
-	unique = append(unique, nonCrossingPaths...)
-
-
-	return unique	
+	return nonCrossingPaths	
 }
 
 func hasCrossing(path1, path2 []string) bool {
@@ -95,24 +60,7 @@ func hasCrossing(path1, path2 []string) bool {
 	return false // No crosses found
 }
 
-// Function to check if two string arrays have common elements
-func hasCommonElements(arr1, arr2 []string) bool {
-	set := make(map[string]bool)
 
-	// Add elements of arr1 to the set
-	for _, element := range arr1 {
-		set[element] = true
-	}
-
-	// Check if elements of arr2 are already present in the set
-	for _, element := range arr2 {
-		if set[element] {
-			return true
-		}
-	}
-
-	return false
-}
 
 func GetPathLength(adjList Relation, path []string) (int, error) {
 	length := 0
