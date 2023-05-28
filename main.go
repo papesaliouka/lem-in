@@ -32,22 +32,26 @@ func main() {
 		groups:= helper.MakeGroups(trimmed)
 
 
-		paths,_ := helper.GetSmallestPathOfEachGroup(groups)
-		thePromised:= helper.GiveTheOneWithMostCandidates(paths,groups)
+		_,thePromised := helper.GetSmallestPathOfEachGroup(groups,relations)
+		//thePromised:= helper.GiveTheOneWithMostCandidates(paths,groups)
 
 		elected:= [][]string{thePromised}
 		min:= math.MaxInt32
 
 		found:=0
 
+		fmt.Println("theP",thePromised)
+
 		eligeables :=helper.GetEligeables(thePromised,groups)
 
 		elected = helper.Elector(eligeables, thePromised, found, min, elected, end, groups)
 		
 		connextions := helper.ValidateStartingConnections(relations[start],elected)
-		helper.BigTraversal(connextions,elected,ants)
+		helper.BigTraversal(connextions,elected,thePromised,ants)
 	}
 }
+
+
 
 
 

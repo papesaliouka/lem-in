@@ -30,10 +30,10 @@ func ValidateStartingConnections(startConnections []RelationAndDistance, nonCros
 return connections
 }
 
-func BigTraversal(connections int,paths [][]string,ants int){
+func BigTraversal(connections int,paths [][]string,shortest []string,ants int){
 	if len(paths)>0{
 		canMove:=[]int{}
-		antPaths := giveEachAntHisPath(ants,paths)
+		antPaths := giveEachAntHisPath(ants,paths,shortest)
 		maxMove:=0
 		minMove:= connections
 	
@@ -95,13 +95,25 @@ func makeAStep(canMove *[]int, ants int, antPaths *AntPaths,lastValue,step,maxMo
 	return lastValue
 }
 
-func giveEachAntHisPath(ants int, paths [][]string) AntPaths {
+func giveEachAntHisPath(ants int, paths [][]string,shortest []string) AntPaths {
+
+	Sort2DArrayByLength(paths)
+	paths = RemoveDuplicateFrom2DArray(paths)
+
+	fmt.Println("paths",paths)
+
+
 	if len(paths)>0{
+
 		antPaths := AntPaths{}
 		pathIndex:=0
+
 		for i:= 1; i<=ants  ;i++{
 			pathIndex = (pathIndex +1) % len(paths)
 			antPaths[i]=paths[pathIndex]
+			if (i==ants)  && (ants %2)==0  {
+				antPaths[i]=paths[0]
+			}
 		}
 		return antPaths
 	}

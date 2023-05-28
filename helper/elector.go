@@ -7,14 +7,17 @@ import (
 func Elector(eligeables [][]string, thePromised []string, found int, min int, elected [][]string, end string, groups Group) [][]string {
 	if len(eligeables) > 0 {
 
+		valid :=[][][]string{}
+
 		allPossibilities := GenerateAllPossibilities(thePromised, eligeables)
 		for _, v := range allPossibilities {
 			if !HasCommonElements2(v) {
 				found++
-				flatened, flat := Flat2DArray(v)
+				_, flat := Flat2DArray(v)
 				if len(flat) < min {
 					min = len(flat)
-					elected = flatened
+					valid = append(valid, v)
+					elected = v
 				}
 			}
 		}

@@ -11,7 +11,7 @@ type Group map[string][][]string
 func getSourcesAndTargets(groups Group, key string)([][]string,[][]string){
 	sources := groups[key]
 	targets :=[][]string{}
-
+	
 	for k,v:=range groups{
 		if k!=key{
 			targets = append(targets, v...)
@@ -26,8 +26,7 @@ func GenerateAllPossibilities(thePromised []string, eligeables [][]string)[][][]
 
 	for key,_:=range groups{
 		sources,targets:= getSourcesAndTargets(groups,key)
-		allPossibilities= GenerateCombinations(thePromised,targets,sources)
-		break
+		allPossibilities= append(allPossibilities,GenerateCombinations(thePromised,targets,sources)...)
 	}
 
 	return allPossibilities
@@ -40,6 +39,7 @@ func GiveTheOneWithMostCandidates(paths[][]string,groups Group)[]string{
 
 	for _,path := range paths{
 		eligeables:=GetEligeables(path,groups)
+		eligeables = FindNonCrossingPaths(eligeables)
 		_,flat:=Flat2DArray(eligeables)
 		if len(flat)>max{
 			max = len(flat)
@@ -53,47 +53,35 @@ func GetEligeables(shortestOfAll []string,groups Group) [][]string{
 
 	eligeables := [][]string{}
 
-	for _,paths:= range groups{
-			for _,path:=range paths{
-				if !HasCommonElements(shortestOfAll[:len(shortestOfAll)-1],path[:len(path)-1]){
-					eligeables = append(eligeables, path)
-				}
+	sortedGroups:=TurnGroupToOrdered3DArray(groups)
+
+	for _,paths:= range sortedGroups{
+		for _,path:=range paths{
+			if !HasCommonElements(shortestOfAll,path){
+				eligeables = append(eligeables, path)
 			}
-		
+		}	
 	}
+
 	return eligeables
 }
 
-func GetSmallestPathOfEachGroup(groups Group) ([][]string, []string) {
+func GetSmallestPathOfEachGroup(groups Group,relations Relation) ([][]string, []string) {
 	smallestPaths := [][]string{}
 	var theSmallestOfAll []string
-	lenSmallestOfAll := math.MaxInt32
 
-	for _, paths := range groups {
-		smallestPath := getSmallestPath(paths)
-		_, flat := Flat2DArray(smallestPaths)
-		if len(flat) < lenSmallestOfAll && len(flat) > 0 {
-			lenSmallestOfAll = len(flat)
-			theSmallestOfAll = smallestPath
-		}
-		smallestPaths = append(smallestPaths, smallestPath)
+	sortedGroup:= TurnGroupToOrdered3DArray(groups)
+
+	for _, paths := range sortedGroup {
+		Sort2DArrayByLength(paths)
+		smallestPaths = append(smallestPaths, paths[0])
 	}
+
+	Sort2DArrayByLength(smallestPaths)
+
+	theSmallestOfAll = GiveTheOneWithMostCandidates(smallestPaths,groups)
 
 	return smallestPaths, theSmallestOfAll
-}
-
-func getSmallestPath(paths [][]string) []string {
-	var smallest []string
-	lenSmall := math.MaxInt32
-
-	for _, path := range paths {
-		if len(path) < lenSmall && len(path) > 0 {
-			lenSmall = len(path)
-			smallest = path
-		}
-	}
-
-	return smallest
 }
 
 

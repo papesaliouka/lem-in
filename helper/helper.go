@@ -3,9 +3,46 @@ package helper
 import (
 	"fmt"
 	"os"
+	"sort"
 )
 
 
+func TurnGroupToOrdered3DArray(groups Group)[][][]string{
+	big:=[][][]string{}
+	for _,v :=range groups{
+		big = append(big,v)
+	}
+	Sort3DArrayByLength(big)
+	return big
+}
+
+
+func RemoveDuplicateFrom2DArray(arr [][]string)[][]string {
+	uniqueMap := map[string]bool{}
+	uniqueArr := [][]string{}
+
+	for _,innerArr := range arr{
+		str := fmt.Sprintf("%v",innerArr)
+
+		if !uniqueMap[str]{
+			uniqueMap[str]=true
+			uniqueArr = append(uniqueArr, innerArr)
+		}
+	}
+	return uniqueArr
+}
+
+func Sort2DArrayByLength(arr [][]string){
+	sort.Slice(arr, func(i, j int) bool {
+		return len(arr[i])<len(arr[j])
+	})
+}
+
+func Sort3DArrayByLength(arr [][][]string){
+	sort.Slice(arr, func(i, j int) bool {
+		return len(arr[i])<len(arr[j])
+	})
+}
 
 func Flat2DArray(v [][]string) ([][]string, []string) {
 	flatened := [][]string{}
@@ -105,15 +142,16 @@ func GenerateCombinations(thePromised []string, sources [][]string, targets [][]
 	for range thePromised {
 		for _, target := range targets {
 			for _, source := range sources {
-				if (!HasCommonElements(thePromised,source)) && 
-				!(HasCommonElements(thePromised,target)){
+				// if !(HasCommonElements(thePromised,source)) && 
+				// !(HasCommonElements(thePromised,target)) &&
+				// !(HasCommonElements(target,source)){
 					combination := [][]string{
 						thePromised,
 						target,
 						source,
 					}
 					combinations = append(combinations, combination)
-				}
+			//	}
 			}
 		}
 	}

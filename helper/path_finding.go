@@ -40,21 +40,27 @@ func FindNonCrossingPaths(paths [][]string) [][]string {
 
 func hasCrossing(path1, path2 []string) bool {
 	// Iterate through each segment of path1
-	for i := 1; i < len(path1)-1; i++ {
-		segment1Start := path1[i-1]
-		segment1End := path1[i]
+	for i := 0; i < len(path1)-1; i++ {
 
+		if i-1>=0 && i<len(path1)-1{
+			segment1Start := path1[i-1]
+			segment1End := path1[i]
+	
+			
+			// Iterate through each segment of path2
+			for j := 0; j < len(path2)-1; j++ {
+				if j-1>=0 && j<len(path2)-1{
+					segment2Start := path2[j-1]
+					segment2End := path2[j]
 		
-		// Iterate through each segment of path2
-		for j := 1; j < len(path2)-1; j++ {
-			segment2Start := path2[j-1]
-			segment2End := path2[j]
-
-			// Check if the two segments intersect
-			if segment1Start == segment2End && segment1End == segment2Start {
-				return true // Crosses found
+					// Check if the two segments intersect
+					if segment1Start == segment2End && segment1End == segment2Start {
+						return true // Crosses found
+					}
+				}
 			}
 		}
+
 	}
 
 	return false // No crosses found
