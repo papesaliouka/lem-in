@@ -100,7 +100,6 @@ func giveEachAntHisPath(ants int, paths [][]string,shortest []string) AntPaths {
 	Sort2DArrayByLength(paths)
 	paths = RemoveDuplicateFrom2DArray(paths)
 
-	fmt.Println("paths",paths)
 
 
 	if len(paths)>0{
@@ -109,10 +108,16 @@ func giveEachAntHisPath(ants int, paths [][]string,shortest []string) AntPaths {
 		pathIndex:=0
 
 		for i:= 1; i<=ants  ;i++{
-			pathIndex = (pathIndex +1) % len(paths)
+
 			antPaths[i]=paths[pathIndex]
-			if (i==ants)  && (ants %2)==0  {
+
+			if i==ants{
 				antPaths[i]=paths[0]
+			}
+
+			pathIndex = pathIndex +1
+			if pathIndex == len(paths){
+				pathIndex=0
 			}
 		}
 		return antPaths

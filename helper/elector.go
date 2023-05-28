@@ -4,10 +4,11 @@ import (
 	"math"
 )
 
-func Elector(eligeables [][]string, thePromised []string, found int, min int, elected [][]string, end string, groups Group) [][]string {
+func Elector(eligeables [][]string, thePromised []string, elected [][]string, end string, groups Group) [][]string {
 	if len(eligeables) > 0 {
 
-		valid :=[][][]string{}
+		found :=0
+		min :=math.MaxInt32
 
 		allPossibilities := GenerateAllPossibilities(thePromised, eligeables)
 		for _, v := range allPossibilities {
@@ -16,7 +17,6 @@ func Elector(eligeables [][]string, thePromised []string, found int, min int, el
 				_, flat := Flat2DArray(v)
 				if len(flat) < min {
 					min = len(flat)
-					valid = append(valid, v)
 					elected = v
 				}
 			}

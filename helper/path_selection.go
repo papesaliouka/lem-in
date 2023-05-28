@@ -6,8 +6,6 @@ import (
 
 type Group map[string][][]string
 
-
-
 func getSourcesAndTargets(groups Group, key string)([][]string,[][]string){
 	sources := groups[key]
 	targets :=[][]string{}

@@ -3,9 +3,7 @@ package main
 import (
 	"fmt"
 	"lem-in/helper"
-	"math"
 	"os"
-//	"strings"
 )
 
 func main() {
@@ -31,20 +29,10 @@ func main() {
 		trimmed := helper.RemoveStart(allPaths)
 		groups:= helper.MakeGroups(trimmed)
 
-
 		_,thePromised := helper.GetSmallestPathOfEachGroup(groups,relations)
-		//thePromised:= helper.GiveTheOneWithMostCandidates(paths,groups)
-
 		elected:= [][]string{thePromised}
-		min:= math.MaxInt32
-
-		found:=0
-
-		fmt.Println("theP",thePromised)
-
 		eligeables :=helper.GetEligeables(thePromised,groups)
-
-		elected = helper.Elector(eligeables, thePromised, found, min, elected, end, groups)
+		elected = helper.Elector(eligeables, thePromised,  elected, end, groups)
 		
 		connextions := helper.ValidateStartingConnections(relations[start],elected)
 		helper.BigTraversal(connextions,elected,thePromised,ants)

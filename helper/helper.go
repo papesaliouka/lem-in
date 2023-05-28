@@ -68,7 +68,8 @@ func ParseInputFile(filename string) (Relation,[]Room, int) {
 	rooms := GetRooms(filename)
 	relations :=GetRelations(filename,rooms)
 
-	fmt.Println(string(content),"\n")
+	fmt.Println(string(content))
+	fmt.Println()
 
 	return relations,rooms,antNumbers
 }
